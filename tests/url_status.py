@@ -14,16 +14,16 @@ def test_url_status(driver, url):
 
     driver.get(url)
     links = driver.find_elements(By.TAG_NAME, "a")
-    broken_links = []
+    results = []
     for link in links:
         href = link.get_attribute("href")
         if href:
             try:
                 response = requests.head(href)
                 if response.status_code == 404:
-                    broken_links.append(href)
+                    results.append([False, f"Broken link: {href}"])
+                else:
+                    results.append([True, f"Valid link: {href}"])
             except Exception:
-                broken_links.append(href)
-    if broken_links:
-        return [[False, f"Broken links found: {broken_links}"]]
-    return [[True, "All links are valid"]]
+                results.append([False, f"Broken link: {href}"])
+    return results if results else [results]

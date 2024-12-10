@@ -8,7 +8,16 @@ def test_image_alt(driver, url):
 
     driver.get(url)
     images = driver.find_elements(By.TAG_NAME, "img")
-    missing_alt = [img for img in images if not img.get_attribute("alt")]
-    if missing_alt:
-        return [[False, f"{len(missing_alt)} images are missing alt attributes"]]
-    return [[True, "All images have alt attributes"]]
+    results = []
+    for img in images:
+        if not img.get_attribute("alt"):
+            results.append(
+                [
+                    False,
+                    f"src: {img.get_attribute('src')}",
+                ]
+            )
+
+        else:
+            results.append([True, f"src: {img.get_attribute('src')}"])
+    return results if results else [results]
